@@ -6,12 +6,12 @@ import {
   SendOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [selectedItem, setSelectedItem] = useState('users');
 
   const handleClickNavbarItem = (event) => {
-    // TODO: Navigate to the page
     setSelectedItem(event.key);
   };
 
@@ -22,16 +22,16 @@ const Navbar = () => {
       onClick={handleClickNavbarItem}
     >
       <Menu.Item key='users' icon={<FormOutlined />}>
-        Usuarios
+        <Link to='/'>Usuarios</Link>
       </Menu.Item>
       <Menu.Item key='clients' icon={<UserOutlined />}>
-        Clientes
+        <Link to='/clients'>Clientes</Link>
       </Menu.Item>
       <Menu.Item key='employees' icon={<ExperimentOutlined />}>
-        Empleados
+        <Link to='/employees'>Empleados</Link>
       </Menu.Item>
       <Menu.Item key='shipping' icon={<SendOutlined />}>
-        Envíos
+        <Link to='/shipping'>Envíos</Link>
       </Menu.Item>
     </Menu>
   );
