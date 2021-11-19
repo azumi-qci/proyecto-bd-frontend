@@ -25,15 +25,21 @@ const ClientsPage = () => {
   const [modalMode, setModalMode] = useState('add');
   const [sending, setSending] = useState(false);
   const [newRow, setNewRow] = useState({
+    idcliente: 0,
     nombre: '',
     direccion: '',
     telefono: '',
-    curp: '',
     genero: null,
     fechaNacimiento: '',
+    curp: '',
   });
 
   const columns = [
+    {
+      title: 'ID',
+      dataIndex: 'idcliente',
+      key: 'idcliente',
+    },
     {
       title: 'Nombre',
       dataIndex: 'nombre',
@@ -167,7 +173,9 @@ const ClientsPage = () => {
       .delete(`/clientes/${idcliente}`)
       .then(() => {
         // Get a copy of the rows
-        const temp = [...clients].filter((row) => row.idcliente !== idcliente);
+        const temp = [...clients].filter(
+          (item) => item.idcliente !== idcliente
+        );
 
         setClients([...temp]);
 
@@ -191,8 +199,15 @@ const ClientsPage = () => {
   };
 
   const saveChanges = () => {
-    const { nombre, direccion, telefono, curp, genero, fechaNacimiento } =
-      newRow;
+    const {
+      idcliente,
+      nombre,
+      direccion,
+      telefono,
+      curp,
+      genero,
+      fechaNacimiento,
+    } = newRow;
 
     if (
       !nombre ||
@@ -207,10 +222,52 @@ const ClientsPage = () => {
     }
 
     setSending(true);
+
+    api
+      .put(`/clientes/${idcliente}`, {
+        nombre,
+        direccion,
+        telefono,
+        curp,
+        genero,
+        fechaNacimiento,
+      })
+      .then(() => {
+        let temp = [...clients];
+
+        const index = temp.findIndex((item) => item.idcliente === idcliente);
+
+        if (index > -1) {
+          temp.splice(index, 1, {
+            idcliente,
+            nombre,
+            direccion,
+            telefono,
+            curp,
+            genero,
+            fecha_nacimiento: fechaNacimiento,
+          });
+
+          setClients([...temp]);
+
+          message.success('La fila fue actualizada correctamente');
+        } else {
+          message.error('Error desconocido');
+          console.log('El registro no fue encontrado... WTF');
+        }
+
+        setShowModal(false);
+      })
+      .catch((reason) => {
+        console.log(reason);
+        message.error('Se generó un error al actualizar los datos');
+      })
+      .finally(() => setSending(false));
   };
 
   const resetValues = () => {
     setNewRow({
+      idcliente: 0,
       nombre: '',
       direccion: '',
       telefono: '',
