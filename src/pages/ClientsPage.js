@@ -8,6 +8,7 @@ import {
   Input,
   Select,
   DatePicker,
+  Popconfirm,
 } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
@@ -74,10 +75,17 @@ const ClientsPage = () => {
     {
       title: 'Acción',
       key: 'action',
-      render: () => (
+      render: (text, record) => (
         <Space size='middle'>
           <Button type='primary'>Editar</Button>
-          <Button danger={true}>Eliminar</Button>
+          <Popconfirm
+            cancelText='Cancelar'
+            okText='Eliminar'
+            onConfirm={() => deleteClient(record.idcliente)}
+            title='Está a punto de eliminar esta fila, ¿desea continuar?'
+          >
+            <Button danger={true}>Eliminar</Button>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -148,6 +156,23 @@ const ClientsPage = () => {
         message.error('Se generó un error al insertar el registro');
       })
       .finally(() => setSending(false));
+  };
+
+  const deleteClient = (idcliente) => {
+    api
+      .delete(`/clientes/${idcliente}`)
+      .then(() => {
+        // Get a copy of the rows
+        const temp = [...clients].filter((row) => row.idcliente !== idcliente);
+
+        setClients([...temp]);
+
+        message.success('La fila fue eliminada correctamente');
+      })
+      .catch((reason) => {
+        console.log(reason);
+        message.error('Se generó un error al eliminar la fila');
+      });
   };
 
   const resetValues = () => {
