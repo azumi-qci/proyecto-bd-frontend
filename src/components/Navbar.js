@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Menu } from 'antd';
 import {
-  ExperimentOutlined,
-  FormOutlined,
-  SendOutlined,
+  InboxOutlined,
+  FileMarkdownFilled,
   UserOutlined,
+  IdcardOutlined,
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
@@ -22,17 +22,20 @@ const Navbar = () => {
       onClick={handleClickNavbarItem}
       theme='dark'
     >
-      <Menu.Item key='users' icon={<FormOutlined />}>
-        <Link to='/'>Usuarios</Link>
+      <Menu.Item key='cashier' icon={<FileMarkdownFilled />}>
+        <Link to='/'>Cajero</Link>
       </Menu.Item>
       <Menu.Item key='clients' icon={<UserOutlined />}>
         <Link to='/clients'>Clientes</Link>
       </Menu.Item>
-      <Menu.Item key='employees' icon={<ExperimentOutlined />}>
-        <Link to='/employees'>Empleados</Link>
+      <Menu.Item key='packages' icon={<InboxOutlined />}>
+        <Link to='/packages'>Paquete</Link>
       </Menu.Item>
-      <Menu.Item key='shipping' icon={<SendOutlined />}>
-        <Link to='/shipping'>Envíos</Link>
+      <Menu.Item key='delivery' icon={<IdcardOutlined />}>
+        <Link to='/delivery'>Repartidor</Link>
+      </Menu.Item>
+      <Menu.Item key='business' icon={<IdcardOutlined />}>
+        <Link to='/business'>Empresa externa</Link>
       </Menu.Item>
     </Menu>
   );
