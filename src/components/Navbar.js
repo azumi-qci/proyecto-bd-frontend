@@ -20,6 +20,7 @@ const Navbar = () => {
       mode='horizontal'
       selectedKeys={[selectedItem]}
       onClick={handleClickNavbarItem}
+      theme='dark'
     >
       <Menu.Item key='users' icon={<FormOutlined />}>
         <Link to='/'>Usuarios</Link>
