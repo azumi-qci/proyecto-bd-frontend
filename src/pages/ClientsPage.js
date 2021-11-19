@@ -11,6 +11,7 @@ import {
   Popconfirm,
 } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 import api from '../api';
 
@@ -21,6 +22,8 @@ const { Option } = Select;
 const ClientsPage = () => {
   const [clients, setClients] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState('add');
+  const [sending, setSending] = useState(false);
   const [newRow, setNewRow] = useState({
     nombre: '',
     direccion: '',
@@ -29,7 +32,6 @@ const ClientsPage = () => {
     genero: null,
     fechaNacimiento: '',
   });
-  const [sending, setSending] = useState(false);
 
   const columns = [
     {
@@ -77,11 +79,13 @@ const ClientsPage = () => {
       key: 'action',
       render: (text, record) => (
         <Space size='middle'>
-          <Button type='primary'>Editar</Button>
+          <Button type='primary' onClick={() => handleClickEdit(record)}>
+            Editar
+          </Button>
           <Popconfirm
             cancelText='Cancelar'
             okText='Eliminar'
-            onConfirm={() => deleteClient(record.idcliente)}
+            onConfirm={() => handleClickDelete(record.idcliente)}
             title='Está a punto de eliminar esta fila, ¿desea continuar?'
           >
             <Button danger={true}>Eliminar</Button>
@@ -107,7 +111,7 @@ const ClientsPage = () => {
       });
   };
 
-  const addNewClient = () => {
+  const handleClickAdd = () => {
     const { nombre, direccion, telefono, curp, genero, fechaNacimiento } =
       newRow;
 
@@ -158,7 +162,7 @@ const ClientsPage = () => {
       .finally(() => setSending(false));
   };
 
-  const deleteClient = (idcliente) => {
+  const handleClickDelete = (idcliente) => {
     api
       .delete(`/clientes/${idcliente}`)
       .then(() => {
@@ -173,6 +177,36 @@ const ClientsPage = () => {
         console.log(reason);
         message.error('Se generó un error al eliminar la fila');
       });
+  };
+
+  const handleClickEdit = (record) => {
+    setModalMode('edit');
+
+    setNewRow({
+      ...record,
+      fechaNacimiento: record['fecha_nacimiento'],
+    });
+
+    setShowModal(true);
+  };
+
+  const saveChanges = () => {
+    const { nombre, direccion, telefono, curp, genero, fechaNacimiento } =
+      newRow;
+
+    if (
+      !nombre ||
+      !direccion ||
+      !telefono ||
+      !curp ||
+      isNaN(genero) ||
+      !fechaNacimiento
+    ) {
+      message.error('Existen campos vacíos');
+      return;
+    }
+
+    setSending(true);
   };
 
   const resetValues = () => {
@@ -192,7 +226,10 @@ const ClientsPage = () => {
         <Space direction='vertical' size='middle' className='clients-spacer'>
           <Button
             icon={<PlusCircleOutlined />}
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              setModalMode('add');
+              setShowModal(true);
+            }}
             type='primary'
           >
             Nuevo registro
@@ -205,10 +242,12 @@ const ClientsPage = () => {
         afterClose={resetValues}
         cancelText='Cancelar'
         confirmLoading={sending}
-        okText='Agregar'
+        okText={modalMode === 'add' ? 'Agregar' : 'Guardar cambios'}
         onCancel={() => setShowModal(false)}
-        onOk={addNewClient}
-        title='Agregar nuevo registro'
+        onOk={modalMode === 'add' ? handleClickAdd : saveChanges}
+        title={
+          modalMode === 'add' ? 'Agregar nuevo registro' : 'Editar registro'
+        }
         visible={showModal}
       >
         <Space direction='vertical' size='middle' className='clients-spacer'>
@@ -256,9 +295,12 @@ const ClientsPage = () => {
             <Option value={1}>Femenino</Option>
           </Select>
           <DatePicker
-            disabled={sending}
             className='clients-spacer'
+            disabled={sending}
             placeholder='Seleccionar fecha de nacimiento'
+            value={
+              newRow.fechaNacimiento ? moment(newRow.fechaNacimiento) : null
+            }
             onChange={(value) =>
               setNewRow({ ...newRow, fechaNacimiento: value.toISOString() })
             }
