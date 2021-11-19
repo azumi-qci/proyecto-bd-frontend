@@ -21,9 +21,10 @@ const { Option } = Select;
 
 const ClientsPage = () => {
   const [clients, setClients] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [modalMode, setModalMode] = useState('add');
   const [sending, setSending] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [newRow, setNewRow] = useState({
     idcliente: 0,
     nombre: '',
@@ -114,7 +115,8 @@ const ClientsPage = () => {
       .catch((reason) => {
         console.log(reason);
         message.error('Se generó un error al obtener la información');
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleClickAdd = () => {
@@ -291,7 +293,7 @@ const ClientsPage = () => {
           >
             Nuevo registro
           </Button>
-          <Table columns={columns} dataSource={clients} />
+          <Table loading={loading} columns={columns} dataSource={clients} />
         </Space>
       </div>
       {/* Add new row modal */}
