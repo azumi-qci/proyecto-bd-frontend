@@ -23,7 +23,7 @@ const Navbar = () => {
       theme='dark'
     >
       <Menu.Item key='cashier' icon={<FileMarkdownFilled />}>
-        <Link to='/'>Cajero</Link>
+        <Link to='/'>Empleado</Link>
       </Menu.Item>
       <Menu.Item key='clients' icon={<UserOutlined />}>
         <Link to='/clients'>Clientes</Link>
