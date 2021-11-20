@@ -15,7 +15,9 @@ import moment from 'moment';
 
 import api from '../api';
 
-import '../styles/Clients.page.css';
+import { APP_NAME } from '../app.config';
+
+import '../styles/general.css';
 
 const { Option } = Select;
 
@@ -104,6 +106,10 @@ const ClientsPage = () => {
 
   useEffect(() => {
     getAllClients();
+  }, []);
+
+  useEffect(() => {
+    document.title = `Clientes | ${APP_NAME}`;
   }, []);
 
   const getAllClients = () => {
@@ -281,8 +287,8 @@ const ClientsPage = () => {
 
   return (
     <>
-      <div className='clients-container'>
-        <Space direction='vertical' size='middle' className='clients-spacer'>
+      <div className='main-container'>
+        <Space direction='vertical' size='middle' className='full-width'>
           <Button
             icon={<PlusCircleOutlined />}
             onClick={() => {
@@ -309,7 +315,7 @@ const ClientsPage = () => {
         }
         visible={showModal}
       >
-        <Space direction='vertical' size='middle' className='clients-spacer'>
+        <Space direction='vertical' size='middle' className='full-width'>
           <Input
             disabled={sending}
             placeholder='Ingresar nombre'
@@ -344,7 +350,7 @@ const ClientsPage = () => {
           />
           <Select
             disabled={sending}
-            className='clients-spacer'
+            className='full-width'
             onChange={(value) => setNewRow({ ...newRow, genero: value })}
             placeholder='Seleccionar género'
             value={newRow.genero}
@@ -354,7 +360,7 @@ const ClientsPage = () => {
             <Option value={1}>Femenino</Option>
           </Select>
           <DatePicker
-            className='clients-spacer'
+            className='full-width'
             disabled={sending}
             placeholder='Seleccionar fecha de nacimiento'
             value={

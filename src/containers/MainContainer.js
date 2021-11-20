@@ -6,7 +6,6 @@ import { Content, Header, Footer } from 'antd/lib/layout/layout';
 import Navbar from '../components/Navbar';
 import MyFooter from '../components/Footer';
 
-import UsersPage from '../pages/UsersPage';
 import ClientsPage from '../pages/ClientsPage';
 import EmployeesPage from '../pages/EmployeesPage';
 import ShippingPage from '../pages/ShippingPage';
@@ -23,7 +22,7 @@ const MainContainer = () => {
         <Content>
           <Switch>
             <Route path='/' exact={true}>
-              <UsersPage />
+              <EmployeesPage />
             </Route>
             <Route path='/clients'>
               <ClientsPage />
