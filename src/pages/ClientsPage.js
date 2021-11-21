@@ -22,7 +22,7 @@ import '../styles/general.css';
 const { Option } = Select;
 
 const ClientsPage = () => {
-  const [clients, setClients] = useState([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalMode, setModalMode] = useState('add');
   const [sending, setSending] = useState(false);
@@ -116,7 +116,7 @@ const ClientsPage = () => {
     api
       .get('/clientes')
       .then((response) => {
-        setClients([...response.data]);
+        setData([...response.data]);
       })
       .catch((reason) => {
         console.log(reason);
@@ -156,8 +156,8 @@ const ClientsPage = () => {
         setShowModal(false);
         message.success('El registro fue insertado correctamente');
 
-        setClients([
-          ...clients,
+        setData([
+          ...data,
           {
             idcliente: response.data.idcliente,
             nombre,
@@ -181,11 +181,9 @@ const ClientsPage = () => {
       .delete(`/clientes/${idcliente}`)
       .then(() => {
         // Get a copy of the rows
-        const temp = [...clients].filter(
-          (item) => item.idcliente !== idcliente
-        );
+        const temp = [...data].filter((item) => item.idcliente !== idcliente);
 
-        setClients([...temp]);
+        setData([...temp]);
 
         message.success('La fila fue eliminada correctamente');
       })
@@ -241,7 +239,7 @@ const ClientsPage = () => {
         fechaNacimiento,
       })
       .then(() => {
-        let temp = [...clients];
+        let temp = [...data];
 
         const index = temp.findIndex((item) => item.idcliente === idcliente);
 
@@ -256,7 +254,7 @@ const ClientsPage = () => {
             fecha_nacimiento: fechaNacimiento,
           });
 
-          setClients([...temp]);
+          setData([...temp]);
 
           message.success('La fila fue actualizada correctamente');
         } else {
@@ -299,7 +297,7 @@ const ClientsPage = () => {
           >
             Nuevo registro
           </Button>
-          <Table loading={loading} columns={columns} dataSource={clients} />
+          <Table loading={loading} columns={columns} dataSource={data} />
         </Space>
       </div>
       {/* Add new row modal */}

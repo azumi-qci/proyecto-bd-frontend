@@ -20,7 +20,7 @@ import '../styles/general.css';
 const { Option } = Select;
 
 const EmployeesPage = () => {
-  const [employees, setEmployees] = useState([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalMode, setModalMode] = useState('add');
   const [sending, setSending] = useState(false);
@@ -87,7 +87,7 @@ const EmployeesPage = () => {
     api
       .get('/empleados')
       .then((response) => {
-        setEmployees([...response.data]);
+        setData([...response.data]);
       })
       .catch((reason) => {
         console.log(reason);
@@ -115,8 +115,8 @@ const EmployeesPage = () => {
         setShowModal(false);
         message.success('El registro fue insertado correctamente');
 
-        setEmployees([
-          ...employees,
+        setData([
+          ...data,
           {
             idempleado: response.data.idempleado,
             nombre,
@@ -136,11 +136,9 @@ const EmployeesPage = () => {
       .delete(`/empleados/${idempleado}`)
       .then(() => {
         // Get a copy of the rows
-        const temp = [...employees].filter(
-          (item) => item.idempleado !== idempleado
-        );
+        const temp = [...data].filter((item) => item.idempleado !== idempleado);
 
-        setEmployees([...temp]);
+        setData([...temp]);
 
         message.success('La fila fue eliminada correctamente');
       })
@@ -176,7 +174,7 @@ const EmployeesPage = () => {
         turno,
       })
       .then(() => {
-        let temp = [...employees];
+        let temp = [...data];
 
         const index = temp.findIndex((item) => item.idempleado === idempleado);
 
@@ -187,7 +185,7 @@ const EmployeesPage = () => {
             turno,
           });
 
-          setEmployees([...temp]);
+          setData([...temp]);
 
           message.success('La fila fue actualizada correctamente');
         } else {
@@ -226,7 +224,7 @@ const EmployeesPage = () => {
           >
             Nuevo registro
           </Button>
-          <Table loading={loading} columns={columns} dataSource={employees} />
+          <Table loading={loading} columns={columns} dataSource={data} />
         </Space>
       </div>
       {/* Add new row modal */}

@@ -21,7 +21,7 @@ import '../styles/general.css';
 const { Option } = Select;
 
 const ShippingPage = () => {
-  const [packages, setPackages] = useState([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalMode, setModalMode] = useState('add');
   const [sending, setSending] = useState(false);
@@ -107,7 +107,7 @@ const ShippingPage = () => {
     api
       .get('/paquetes')
       .then((response) => {
-        setPackages([...response.data]);
+        setData([...response.data]);
       })
       .catch((reason) => {
         console.log(reason);
@@ -144,8 +144,8 @@ const ShippingPage = () => {
         setShowModal(false);
         message.success('El registro fue insertado correctamente');
 
-        setPackages([
-          ...packages,
+        setData([
+          ...data,
           {
             idpaquete: response.data.idpaquete,
             nombre_cliente: nombreCliente,
@@ -168,11 +168,9 @@ const ShippingPage = () => {
       .delete(`/paquetes/${idpaquete}`)
       .then(() => {
         // Get a copy of the rows
-        const temp = [...packages].filter(
-          (item) => item.idpaquete !== idpaquete
-        );
+        const temp = [...data].filter((item) => item.idpaquete !== idpaquete);
 
-        setPackages([...temp]);
+        setData([...temp]);
 
         message.success('La fila fue eliminada correctamente');
       })
@@ -221,7 +219,7 @@ const ShippingPage = () => {
         dimension,
       })
       .then(() => {
-        let temp = [...packages];
+        let temp = [...data];
 
         const index = temp.findIndex((item) => item.idpaquete === idpaquete);
 
@@ -235,7 +233,7 @@ const ShippingPage = () => {
             dimension,
           });
 
-          setPackages([...temp]);
+          setData([...temp]);
 
           message.success('La fila fue actualizada correctamente');
         } else {
@@ -277,7 +275,7 @@ const ShippingPage = () => {
           >
             Nuevo registro
           </Button>
-          <Table loading={loading} columns={columns} dataSource={packages} />
+          <Table loading={loading} columns={columns} dataSource={data} />
         </Space>
       </div>
       {/* Add new row modal */}
