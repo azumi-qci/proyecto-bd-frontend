@@ -9,6 +9,7 @@ import MyFooter from '../components/Footer';
 import ClientsPage from '../pages/ClientsPage';
 import EmployeesPage from '../pages/EmployeesPage';
 import PackagesPage from '../pages/PackagesPage';
+import DeliveryPage from '../pages/DeliveryPage';
 
 const MainContainer = () => {
   return (
@@ -27,11 +28,11 @@ const MainContainer = () => {
             <Route path='/clients'>
               <ClientsPage />
             </Route>
-            <Route path='/employees'>
-              <EmployeesPage />
-            </Route>
             <Route path='/packages'>
               <PackagesPage />
+            </Route>
+            <Route path='/delivery'>
+              <DeliveryPage />
             </Route>
           </Switch>
         </Content>
