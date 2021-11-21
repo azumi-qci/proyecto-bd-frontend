@@ -23,19 +23,19 @@ const Navbar = () => {
       theme='dark'
     >
       <Menu.Item key='cashier' icon={<FileMarkdownFilled />}>
-        <Link to='/'>Empleado</Link>
+        <Link to='/'>Empleados</Link>
       </Menu.Item>
       <Menu.Item key='clients' icon={<UserOutlined />}>
         <Link to='/clients'>Clientes</Link>
       </Menu.Item>
       <Menu.Item key='packages' icon={<InboxOutlined />}>
-        <Link to='/packages'>Paquete</Link>
+        <Link to='/packages'>Paquetes</Link>
       </Menu.Item>
       <Menu.Item key='delivery' icon={<IdcardOutlined />}>
-        <Link to='/delivery'>Repartidor</Link>
+        <Link to='/delivery'>Repartidorres</Link>
       </Menu.Item>
       <Menu.Item key='business' icon={<IdcardOutlined />}>
-        <Link to='/business'>Empresa externa</Link>
+        <Link to='/business'>Empresas externas</Link>
       </Menu.Item>
     </Menu>
   );

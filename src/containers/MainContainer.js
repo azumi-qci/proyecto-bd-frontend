@@ -8,7 +8,7 @@ import MyFooter from '../components/Footer';
 
 import ClientsPage from '../pages/ClientsPage';
 import EmployeesPage from '../pages/EmployeesPage';
-import ShippingPage from '../pages/ShippingPage';
+import PackagesPage from '../pages/PackagesPage';
 
 const MainContainer = () => {
   return (
@@ -30,8 +30,8 @@ const MainContainer = () => {
             <Route path='/employees'>
               <EmployeesPage />
             </Route>
-            <Route path='/shipping'>
-              <ShippingPage />
+            <Route path='/packages'>
+              <PackagesPage />
             </Route>
           </Switch>
         </Content>

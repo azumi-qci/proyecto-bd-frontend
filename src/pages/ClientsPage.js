@@ -69,19 +69,19 @@ const ClientsPage = () => {
       key: 'genero',
       render: (text) => {
         if (text === 0) {
-          return <p>Masculino</p>;
+          return <>Masculino</>;
         } else if (text === 1) {
-          return <p>Femenino</p>;
+          return <>Femenino</>;
         }
 
-        return <p>Sin definir</p>;
+        return <>Sin definir</>;
       },
     },
     {
       title: 'Fecha de nacimiento',
       dataIndex: 'fecha_nacimiento',
       key: 'fecha_nacimiento',
-      render: (text) => <p>{new Date(text).toLocaleDateString()}</p>,
+      render: (text) => <>{new Date(text).toLocaleDateString()}</>,
     },
     {
       title: 'Acción',

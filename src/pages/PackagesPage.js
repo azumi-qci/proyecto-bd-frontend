@@ -8,6 +8,7 @@ import {
   Input,
   Select,
   Popconfirm,
+  InputNumber,
 } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
@@ -19,38 +20,57 @@ import '../styles/general.css';
 
 const { Option } = Select;
 
-const EmployeesPage = () => {
-  const [employees, setEmployees] = useState([]);
+const ShippingPage = () => {
+  const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalMode, setModalMode] = useState('add');
   const [sending, setSending] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [newRow, setNewRow] = useState({
-    idempleado: 0,
-    nombre: '',
-    turno: undefined,
+    idpaquete: 0,
+    nombreCliente: '',
+    dirDestino: '',
+    dimension: '',
+    peso: undefined,
+    esFragil: undefined,
   });
 
   const columns = [
     {
       title: 'ID',
-      dataIndex: 'idempleado',
-      key: 'idempleado',
+      dataIndex: 'idpaquete',
+      key: 'idpaquete',
     },
     {
-      title: 'Nombre',
-      dataIndex: 'nombre',
-      key: 'nombre',
+      title: 'Nombre del cliente',
+      dataIndex: 'nombre_cliente',
+      key: 'nombre_cliente',
     },
     {
-      title: 'Turno',
-      dataIndex: 'turno',
-      key: 'turno',
+      title: 'Dirección destino',
+      dataIndex: 'dir_destino',
+      key: 'dir_destino',
+    },
+    {
+      title: 'Peso',
+      dataIndex: 'peso',
+      key: 'peso',
+      render: (text) => <>{text} kg</>,
+    },
+    {
+      title: 'Dimensiones',
+      dataIndex: 'dimension',
+      key: 'dimension',
+    },
+    {
+      title: 'Es frágil',
+      dataIndex: 'es_fragil',
+      key: 'es_fragil',
       render: (text) => {
-        if (text === 0) {
-          return <>Matutino</>;
+        if (text) {
+          return <>Sí</>;
         } else {
-          return <>Vespertino</>;
+          return <>No</>;
         }
       },
     },
@@ -65,7 +85,7 @@ const EmployeesPage = () => {
           <Popconfirm
             cancelText='Cancelar'
             okText='Eliminar'
-            onConfirm={() => handleClickDelete(record.idempleado)}
+            onConfirm={() => handleClickDelete(record.idpaquete)}
             title='Está a punto de eliminar esta fila, ¿desea continuar?'
           >
             <Button danger={true}>Eliminar</Button>
@@ -76,18 +96,18 @@ const EmployeesPage = () => {
   ];
 
   useEffect(() => {
-    getAllEmpleados();
+    getAllRecords();
   }, []);
 
   useEffect(() => {
-    document.title = `Empleados | ${APP_NAME}`;
+    document.title = `Paquetes | ${APP_NAME}`;
   }, []);
 
-  const getAllEmpleados = () => {
+  const getAllRecords = () => {
     api
-      .get('/empleados')
+      .get('/paquetes')
       .then((response) => {
-        setEmployees([...response.data]);
+        setPackages([...response.data]);
       })
       .catch((reason) => {
         console.log(reason);
@@ -97,9 +117,15 @@ const EmployeesPage = () => {
   };
 
   const handleClickAdd = () => {
-    const { nombre, turno } = newRow;
+    const { nombreCliente, dirDestino, peso, esFragil, dimension } = newRow;
 
-    if (!nombre || isNaN(turno)) {
+    if (
+      !nombreCliente ||
+      !dirDestino ||
+      isNaN(peso) ||
+      isNaN(esFragil) ||
+      !dimension
+    ) {
       message.error('Existen campos vacíos');
       return;
     }
@@ -107,20 +133,26 @@ const EmployeesPage = () => {
     setSending(true);
 
     api
-      .post('/empleados', {
-        nombre,
-        turno,
+      .post('/paquetes', {
+        nombreCliente,
+        dirDestino,
+        peso,
+        esFragil,
+        dimension,
       })
       .then((response) => {
         setShowModal(false);
         message.success('El registro fue insertado correctamente');
 
-        setEmployees([
-          ...employees,
+        setPackages([
+          ...packages,
           {
-            idempleado: response.data.idempleado,
-            nombre,
-            turno,
+            idpaquete: response.data.idpaquete,
+            nombre_cliente: nombreCliente,
+            dir_destino: dirDestino,
+            peso,
+            es_fragil: esFragil,
+            dimension,
           },
         ]);
       })
@@ -131,16 +163,16 @@ const EmployeesPage = () => {
       .finally(() => setSending(false));
   };
 
-  const handleClickDelete = (idempleado) => {
+  const handleClickDelete = (idpaquete) => {
     api
-      .delete(`/empleados/${idempleado}`)
+      .delete(`/paquetes/${idpaquete}`)
       .then(() => {
         // Get a copy of the rows
-        const temp = [...employees].filter(
-          (item) => item.idempleado !== idempleado
+        const temp = [...packages].filter(
+          (item) => item.idpaquete !== idpaquete
         );
 
-        setEmployees([...temp]);
+        setPackages([...temp]);
 
         message.success('La fila fue eliminada correctamente');
       })
@@ -155,15 +187,25 @@ const EmployeesPage = () => {
 
     setNewRow({
       ...record,
+      nombreCliente: record.nombre_cliente,
+      dirDestino: record.dir_destino,
+      esFragil: record.es_fragil,
     });
 
     setShowModal(true);
   };
 
   const saveChanges = () => {
-    const { idempleado, nombre, turno } = newRow;
+    const { idpaquete, nombreCliente, dirDestino, peso, esFragil, dimension } =
+      newRow;
 
-    if (!nombre || isNaN(turno)) {
+    if (
+      !nombreCliente ||
+      !dirDestino ||
+      isNaN(peso) ||
+      isNaN(esFragil) ||
+      !dimension
+    ) {
       message.error('Existen campos vacíos');
       return;
     }
@@ -171,23 +213,29 @@ const EmployeesPage = () => {
     setSending(true);
 
     api
-      .put(`/empleados/${idempleado}`, {
-        nombre,
-        turno,
+      .put(`/paquetes/${idpaquete}`, {
+        nombreCliente,
+        dirDestino,
+        peso,
+        esFragil,
+        dimension,
       })
       .then(() => {
-        let temp = [...employees];
+        let temp = [...packages];
 
-        const index = temp.findIndex((item) => item.idempleado === idempleado);
+        const index = temp.findIndex((item) => item.idpaquete === idpaquete);
 
         if (index > -1) {
           temp.splice(index, 1, {
-            idempleado,
-            nombre,
-            turno,
+            idpaquete,
+            nombre_cliente: nombreCliente,
+            dir_destino: dirDestino,
+            peso,
+            es_fragil: esFragil,
+            dimension,
           });
 
-          setEmployees([...temp]);
+          setPackages([...temp]);
 
           message.success('La fila fue actualizada correctamente');
         } else {
@@ -206,9 +254,12 @@ const EmployeesPage = () => {
 
   const resetValues = () => {
     setNewRow({
-      idempleado: 0,
-      nombre: '',
-      turno: undefined,
+      idpaquete: 0,
+      nombreCliente: '',
+      dirDestino: '',
+      dimension: '',
+      peso: undefined,
+      esFragil: undefined,
     });
   };
 
@@ -226,7 +277,7 @@ const EmployeesPage = () => {
           >
             Nuevo registro
           </Button>
-          <Table loading={loading} columns={columns} dataSource={employees} />
+          <Table loading={loading} columns={columns} dataSource={packages} />
         </Space>
       </div>
       {/* Add new row modal */}
@@ -245,21 +296,44 @@ const EmployeesPage = () => {
         <Space direction='vertical' size='middle' className='full-width'>
           <Input
             disabled={sending}
-            placeholder='Ingresar nombre'
-            value={newRow.nombre}
+            placeholder='Ingresar nombre del cliente'
+            value={newRow.nombreCliente}
             onChange={(event) =>
-              setNewRow({ ...newRow, nombre: event.currentTarget.value })
+              setNewRow({ ...newRow, nombreCliente: event.currentTarget.value })
+            }
+          />
+          <Input
+            disabled={sending}
+            placeholder='Ingresar dirección destino'
+            value={newRow.dirDestino}
+            onChange={(event) =>
+              setNewRow({ ...newRow, dirDestino: event.currentTarget.value })
+            }
+          />
+          <InputNumber
+            className='full-width'
+            disabled={sending}
+            onChange={(value) => setNewRow({ ...newRow, peso: value })}
+            placeholder='Ingresar peso en kilogramos'
+            value={newRow.peso}
+          />
+          <Input
+            disabled={sending}
+            placeholder='Ingresar dimensiones'
+            value={newRow.dimension}
+            onChange={(event) =>
+              setNewRow({ ...newRow, dimension: event.currentTarget.value })
             }
           />
           <Select
             disabled={sending}
             className='full-width'
-            onChange={(value) => setNewRow({ ...newRow, turno: value })}
-            placeholder='Seleccionar turno'
-            value={newRow.turno}
+            onChange={(value) => setNewRow({ ...newRow, esFragil: value })}
+            placeholder='¿Es frágil?'
+            value={newRow.esFragil}
           >
-            <Option value={0}>Matutino</Option>
-            <Option value={1}>Vespertino</Option>
+            <Option value={false}>No</Option>
+            <Option value={true}>Sí</Option>
           </Select>
         </Space>
       </Modal>
@@ -267,4 +341,4 @@ const EmployeesPage = () => {
   );
 };
 
-export default EmployeesPage;
+export default ShippingPage;
