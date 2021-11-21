@@ -5,6 +5,7 @@ import {
   FileMarkdownFilled,
   UserOutlined,
   IdcardOutlined,
+  HomeOutlined,
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
@@ -32,9 +33,9 @@ const Navbar = () => {
         <Link to='/packages'>Paquetes</Link>
       </Menu.Item>
       <Menu.Item key='delivery' icon={<IdcardOutlined />}>
-        <Link to='/delivery'>Repartidorres</Link>
+        <Link to='/delivery'>Repartidores</Link>
       </Menu.Item>
-      <Menu.Item key='business' icon={<IdcardOutlined />}>
+      <Menu.Item key='business' icon={<HomeOutlined />}>
         <Link to='/business'>Empresas externas</Link>
       </Menu.Item>
     </Menu>
