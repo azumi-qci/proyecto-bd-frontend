@@ -10,6 +10,7 @@ import ClientsPage from '../pages/ClientsPage';
 import EmployeesPage from '../pages/EmployeesPage';
 import PackagesPage from '../pages/PackagesPage';
 import DeliveryPage from '../pages/DeliveryPage';
+import BusinessPage from '../pages/BusinessPage';
 
 const MainContainer = () => {
   return (
@@ -33,6 +34,9 @@ const MainContainer = () => {
             </Route>
             <Route path='/delivery'>
               <DeliveryPage />
+            </Route>
+            <Route path='/business'>
+              <BusinessPage />
             </Route>
           </Switch>
         </Content>
