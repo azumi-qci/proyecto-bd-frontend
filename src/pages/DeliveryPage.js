@@ -8,7 +8,6 @@ import {
   Input,
   Select,
   Popconfirm,
-  InputNumber,
 } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
