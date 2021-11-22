@@ -232,6 +232,7 @@ const ShippingPage = () => {
 
         if (index > -1) {
           temp.splice(index, 1, {
+            ...data[index],
             idpaquete,
             nombre_cliente: nombreCliente,
             dir_destino: dirDestino,
