@@ -75,6 +75,12 @@ const ShippingPage = () => {
       },
     },
     {
+      title: 'Comisión',
+      dataIndex: 'price',
+      key: 'price',
+      render: (text) => <p>${text} MXN</p>,
+    },
+    {
       title: 'Acción',
       key: 'action',
       render: (text, record) => (
@@ -153,6 +159,7 @@ const ShippingPage = () => {
             peso,
             es_fragil: esFragil,
             dimension,
+            price: response.data.price,
           },
         ]);
       })

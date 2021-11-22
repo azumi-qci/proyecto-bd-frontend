@@ -183,6 +183,7 @@ const BusinessPage = () => {
         if (index > -1) {
           temp.splice(index, 1, {
             idempresa,
+            nombre,
             nombre_representante: nombreRepresentante,
             telefono,
             idvehiculo,
