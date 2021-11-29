@@ -22,6 +22,7 @@ const { Option } = Select;
 
 const ShippingPage = () => {
   const [data, setData] = useState([]);
+  const [delivery, setDelivery] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalMode, setModalMode] = useState('add');
   const [sending, setSending] = useState(false);
@@ -33,6 +34,7 @@ const ShippingPage = () => {
     dimension: '',
     peso: undefined,
     esFragil: undefined,
+    idrepartidor: undefined,
   });
 
   const columns = [
@@ -81,6 +83,11 @@ const ShippingPage = () => {
       render: (text) => <p>${text} MXN</p>,
     },
     {
+      title: 'ID de repartidor',
+      dataIndex: 'idrepartidor',
+      key: 'idrepartidor',
+    },
+    {
       title: 'Acción',
       key: 'action',
       render: (text, record) => (
@@ -119,18 +126,37 @@ const ShippingPage = () => {
         console.log(reason);
         message.error('Se generó un error al obtener la información');
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        api
+          .get('/repartidores')
+          .then((response) => {
+            setDelivery([...response.data]);
+          })
+          .catch((reason) => {
+            console.log(reason);
+            message.error('Se generó un error al obtener la información');
+          })
+          .finally(() => setLoading(false));
+      });
   };
 
   const handleClickAdd = () => {
-    const { nombreCliente, dirDestino, peso, esFragil, dimension } = newRow;
+    const {
+      nombreCliente,
+      dirDestino,
+      peso,
+      esFragil,
+      dimension,
+      idrepartidor,
+    } = newRow;
 
     if (
       !nombreCliente ||
       !dirDestino ||
       isNaN(peso) ||
       isNaN(esFragil) ||
-      !dimension
+      !dimension ||
+      !idrepartidor
     ) {
       message.error('Existen campos vacíos');
       return;
@@ -145,6 +171,7 @@ const ShippingPage = () => {
         peso,
         esFragil,
         dimension,
+        idrepartidor,
       })
       .then((response) => {
         setShowModal(false);
@@ -160,6 +187,7 @@ const ShippingPage = () => {
             es_fragil: esFragil,
             dimension,
             price: response.data.price,
+            idrepartidor,
           },
         ]);
       })
@@ -201,15 +229,23 @@ const ShippingPage = () => {
   };
 
   const saveChanges = () => {
-    const { idpaquete, nombreCliente, dirDestino, peso, esFragil, dimension } =
-      newRow;
+    const {
+      idpaquete,
+      nombreCliente,
+      dirDestino,
+      peso,
+      esFragil,
+      dimension,
+      idrepartidor,
+    } = newRow;
 
     if (
       !nombreCliente ||
       !dirDestino ||
       isNaN(peso) ||
       isNaN(esFragil) ||
-      !dimension
+      !dimension ||
+      !idrepartidor
     ) {
       message.error('Existen campos vacíos');
       return;
@@ -224,6 +260,7 @@ const ShippingPage = () => {
         peso,
         esFragil,
         dimension,
+        idrepartidor,
       })
       .then(() => {
         let temp = [...data];
@@ -239,6 +276,7 @@ const ShippingPage = () => {
             peso,
             es_fragil: esFragil,
             dimension,
+            idrepartidor,
           });
 
           setData([...temp]);
@@ -266,6 +304,7 @@ const ShippingPage = () => {
       dimension: '',
       peso: undefined,
       esFragil: undefined,
+      idrepartidor: undefined,
     });
   };
 
@@ -340,6 +379,17 @@ const ShippingPage = () => {
           >
             <Option value={false}>No</Option>
             <Option value={true}>Sí</Option>
+          </Select>
+          <Select
+            disabled={sending}
+            className='full-width'
+            onChange={(value) => setNewRow({ ...newRow, idrepartidor: value })}
+            placeholder='Seleccione repartidor del paquete'
+            value={newRow.idrepartidor}
+          >
+            {delivery.map((item) => (
+              <Select value={item.idrepartidor}>{item.nombre}</Select>
+            ))}
           </Select>
         </Space>
       </Modal>
